@@ -8,11 +8,16 @@ import { signin, protect } from "./api/modules/auth";
 const app = express();
 
 setupMiddware(app);
+connect();
+// setup basic routing for index route
 
+app.use("/signin", signin);
 app.use("/api", protect, restRouter);
-app.use("/graphql", graphQLRouter);
+app.use("/graphql", protect, graphQLRouter);
 app.use("/docs", graphiqlExpress({ endpointURL: "/graphql" }));
-app.get("/", (req, res) => {
+
+// catch all
+app.all("*", (req, res) => {
   res.json({ ok: true });
 });
 

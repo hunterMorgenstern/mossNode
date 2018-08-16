@@ -1,5 +1,6 @@
 import { User } from "./user.model";
 import merge from "lodash.merge";
+import { Playlist } from "../playlist/playlist.model";
 
 const getMe = (_, __, { user }) => {
   return user;
@@ -16,5 +17,10 @@ export const userResolvers = {
   },
   Mutation: {
     updateMe
+  },
+  User: {
+    playlists() {
+      return Playlist.find({}).exec();
+    }
   }
 };

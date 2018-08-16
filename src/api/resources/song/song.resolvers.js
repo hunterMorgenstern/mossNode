@@ -1,5 +1,6 @@
 import merge from "lodash.merge";
 import { Song } from "./song.model";
+import { User } from "../user/user.model";
 
 const getOneSong = async (_, { id }) => {
   const song = await Song.findById(id).exec();
@@ -16,9 +17,16 @@ const allSongs = () => {
 };
 
 const updateSong = (_, { input }) => {
-  const song = {}; // grab song from db and convert to obj
-  merge(input, song);
-  return song.save();
+  const { id, ...update } = input;
+  return Song.findByIdAndUpdate(id, update, { new: true }).exec();
+};
+
+const createSong = (_, { input }) => {
+  return Song.create(input);
+};
+
+const removeSong = (_, { id }) => {
+  return Song.findByIdAndRemove(id).exec();
 };
 
 export const songResolvers = {
@@ -28,6 +36,7 @@ export const songResolvers = {
   },
   Mutation: {
     updateSong,
-    createSong
+    createSong,
+    removeSong
   }
 };
